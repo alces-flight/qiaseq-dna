@@ -9,8 +9,8 @@ def trimDuplex(cfg):
    print("prep: starting read prep duplex - trimming ends and UMI extraction")
    # get parameters
    readSet = cfg.readSet
-   readFile1 = cfg.readFile1
-   readFile2 = cfg.readFile2
+   readFile1 = cfg.readFile2
+   readFile2 = cfg.readFile1
    cutadaptDir = cfg.cutadaptDir
 
    filePrefixOut = readSet + ".prep"
@@ -39,12 +39,12 @@ def trimDuplex(cfg):
    
    # trim both 5' ends using paired-end-mode, dropping reads that do not have both univerals
    cmd = cutadaptDir + "cutadapt -e 0.18 -O 18 --discard-untrimmed --minimum-length 35 " \
-       + "-u 12 -g ^TTCTGAGCGAYYATAGGAGTCCT -G ^AATGTACAGTATTGCGTTTTG " \
+       + "-u 12 -g ^TTCTGAGCGAYYATAGGAGTCCT " \
        + "-o {0}.temp5.R1.fastq -p {0}.temp5.R2.fastq {0}.temp3.R1.fastq {0}.temp3.R2.fastq > {0}.cutadapt.5.log 2>&1 ".format(filePrefixOut)
    subprocess.check_call(cmd, shell=True)
    
    # delete unneeded fastq file
-   os.remove(filePrefixOut + ".temp3.R2.fastq")
+   #os.remove(filePrefixOut + ".temp3.R2.fastq")
    
    # init counters
    numReadPairsTotal = 0
@@ -54,8 +54,8 @@ def trimDuplex(cfg):
    numReadPairsNN = 0
    
    # open input and output files
-   fileout1 = open(readSet + ".prep.R1.fastq","w")
-   fileout2 = open(readSet + ".prep.R2.fastq","w")
+   fileout1 = open(readSet + ".prep.R2.fastq","w")
+   fileout2 = open(readSet + ".prep.R1.fastq","w")
    filein1  = open(filePrefixOut + ".temp5.R1.fastq","r")
    filein2  = open(filePrefixOut + ".temp5.R2.fastq","r")
    filein3  = open(filePrefixOut + ".temp3.R1.fastq","r")  # needed to pull barcode
@@ -141,5 +141,5 @@ def trimDuplex(cfg):
    # delete unneeded fastq files
    os.remove(filePrefixOut + ".temp3.R1.fastq")
    os.remove(filePrefixOut + ".temp5.R1.fastq")
-   os.remove(filePrefixOut + ".temp5.R2.fastq")
+   #os.remove(filePrefixOut + ".temp5.R2.fastq")
    
