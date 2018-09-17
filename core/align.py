@@ -24,6 +24,7 @@ def run(cfg, readFile1, readFile2, bamFileOut):
  
     # align reads to reference genome using BWA-MEM, and convert to BAM format
     cmd = bwaDir + "bwa mem -C -t " +  numCores \
+    + " " + cfg.bwaopt   \
     + " " + genomeFile   \
     + " " + readFile1    \
     + " " + readFile2    \
